@@ -4,6 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.project.argoss.apresentation.exception.InvalidateCredentialsException;
+import com.project.argoss.apresentation.exception.RecursoNaoEncontradoException;
 import com.project.argoss.domain.entity.Usuario;
 import com.project.argoss.domain.repository.UsuarioRepository;
 import com.project.argoss.infrastructure.details.UserDetailsImp;
@@ -32,20 +34,20 @@ public class JwtService {
 
     public String generateToken(UserDetailsImp usuario){
 
-        Optional<Usuario> user = usuarioRepository.findByEmail(usuario.getUsername());;
+        Usuario user = usuarioRepository.findByEmail(usuario.getUsername()).orElseThrow(() -> new RecursoNaoEncontradoException("jwtService: Usuario nao encontado"));
 
         try{
             String token = JWT.create()
                     .withIssuer("argos-api")
-                    .withSubject(user.get().getId())
-                    .withClaim("email", user.get().getEmail())
+                    .withSubject(user.getId())
+                    .withClaim("email", user.getEmail())
                     .withExpiresAt(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)))
                     .sign(algorithm);
 
             return token;
 
         }catch(JWTCreationException exception){
-            return new JWTCreationException("erro ao gerar token", exception).toString();
+            throw new JWTCreationException("erro ao gerar token", exception);
         }
     }
 
@@ -61,29 +63,9 @@ public class JwtService {
             return subject;
 
         } catch(JWTVerificationException exception){
-            return new RuntimeException("token invalido", exception).toString();
+            throw new JWTVerificationException("Token invalido", exception);
         }
     }
-
-
-
-    public String extractEmail(String token){
-        try {
-
-            String email = JWT.require(algorithm)
-                    .withIssuer("argos-api")
-                    .build()
-                    .verify(token)
-                    .getClaim("email")
-                    .asString();
-
-            return email;
-
-        }catch (JWTVerificationException exception){
-            return new RuntimeException("token invalido ou claim ausente", exception).toString();
-        }
-    }
-
 
     public String extractSubject(String token) {
         try {
@@ -97,7 +79,7 @@ public class JwtService {
             return id;
 
         } catch (JWTVerificationException exception) {
-            throw new RuntimeException("token invalido ou claim ausente", exception);
+            throw new JWTVerificationException("Token invalido ou claim ausente", exception);
         }
 
     }
@@ -107,7 +89,7 @@ public class JwtService {
         String authHeader = httpServletRequest.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")){
-            throw new RuntimeException("token invalido ou mal formatado");
+            throw new InvalidateCredentialsException("Token invalido ou mal formatado");
         }
 
         String token = authHeader.replace("Bearer ", "");

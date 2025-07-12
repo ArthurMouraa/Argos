@@ -3,6 +3,7 @@ package com.project.argoss.aplication.service;
 
 import com.project.argoss.aplication.dto.AuthDto;
 import com.project.argoss.aplication.dto.UsuarioRequest;
+import com.project.argoss.apresentation.exception.InvalidateCredentialsException;
 import com.project.argoss.domain.entity.Usuario;
 import com.project.argoss.domain.mapper.UsuarioMapper;
 import com.project.argoss.domain.repository.UsuarioRepository;
@@ -33,9 +34,6 @@ public class AuthService {
     UsuarioMapper usuarioMapper;
 
 
-
-
-
     public  String login(AuthDto dto){
         try{
             var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
@@ -51,7 +49,7 @@ public class AuthService {
             return token;
 
         }catch (BadCredentialsException exception){
-            throw  new RuntimeException(exception);
+            throw  new InvalidateCredentialsException();
 
         }
 

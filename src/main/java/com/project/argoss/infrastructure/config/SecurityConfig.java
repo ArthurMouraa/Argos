@@ -36,11 +36,11 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/ocorrencia/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/turma/**", "/discente/**").authenticated()
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 
     }

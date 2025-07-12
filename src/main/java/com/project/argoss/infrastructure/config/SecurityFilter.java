@@ -1,5 +1,6 @@
 package com.project.argoss.infrastructure.config;
 
+import com.project.argoss.apresentation.exception.RecursoNaoEncontradoException;
 import com.project.argoss.domain.entity.Usuario;
 import com.project.argoss.domain.repository.UsuarioRepository;
 import com.project.argoss.infrastructure.details.UserDetailsImp;
@@ -39,7 +40,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 System.out.println("Token diferente de null chamado");
                 var userId = jwtService.validateToken(token);
                 Usuario user = usuarioRepository.findById(userId).orElseThrow(
-                        () -> new RuntimeException("Usuario não encontrado")
+                        () -> new RecursoNaoEncontradoException("Usuario nao encontrado")
                 );
 
                 UserDetailsImp detailsUser = new UserDetailsImp(user);
