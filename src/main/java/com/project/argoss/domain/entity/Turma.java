@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "turmas")
+@Table(name = "turma")
 public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

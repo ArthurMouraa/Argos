@@ -1,28 +1,31 @@
 package com.project.argoss.infrastructure.config;
 
+import com.project.argoss.domain.entity.Usuario;
 import com.project.argoss.domain.repository.UsuarioRepository;
+import com.project.argoss.infrastructure.details.UserDetailsImp;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
+    @Autowired
+    JwtService jwtService;
 
-    private final JwtService jwtService;
-    private final UsuarioRepository usuarioRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
+
 
 
     @Override
@@ -33,12 +36,15 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(token != null){
             try{
+                System.out.println("Token diferente de null chamado");
                 var userId = jwtService.validateToken(token);
-                UserDetails user = usuarioRepository.findById(userId).orElseThrow(
+                Usuario user = usuarioRepository.findById(userId).orElseThrow(
                         () -> new RuntimeException("Usuario não encontrado")
                 );
 
-                var authentication = new UsernamePasswordAuthenticationToken(user,null, user.getAuthorities());
+                UserDetailsImp detailsUser = new UserDetailsImp(user);
+
+                var authentication = new UsernamePasswordAuthenticationToken(detailsUser,null, detailsUser.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -48,7 +54,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         }
 
-        filterChain.doFilter(request, response);
+         filterChain.doFilter(request, response);
     }
 
 
@@ -66,5 +72,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         return authHeader.replace("Bearer ", "");
     }
+
+
 
 }

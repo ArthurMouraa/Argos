@@ -5,29 +5,40 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.project.argoss.domain.entity.Usuario;
+import com.project.argoss.domain.repository.UsuarioRepository;
+import com.project.argoss.infrastructure.details.UserDetailsImp;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 
+//@AllArgsConstructor
 @Service
 public class JwtService {
 
-//    @Value("${jwt.secret}")
+
+
     private String secret = "my-secret-security-key";
-    private Algorithm algorithm = Algorithm.HMAC256(secret);
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
 
+    Algorithm algorithm = Algorithm.HMAC256(secret);
 
-    public String generateToken(Usuario usuario){
+    public String generateToken(UserDetailsImp usuario){
+
+        Optional<Usuario> user = usuarioRepository.findByEmail(usuario.getUsername());;
+
         try{
             String token = JWT.create()
                     .withIssuer("argos-api")
-                    .withSubject(usuario.getId())
-                    .withClaim("email", usuario.getEmail())
+                    .withSubject(user.get().getId())
+                    .withClaim("email", user.get().getEmail())
                     .withExpiresAt(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)))
                     .sign(algorithm);
 
@@ -51,6 +62,25 @@ public class JwtService {
 
         } catch(JWTVerificationException exception){
             return new RuntimeException("token invalido", exception).toString();
+        }
+    }
+
+
+
+    public String extractEmail(String token){
+        try {
+
+            String email = JWT.require(algorithm)
+                    .withIssuer("argos-api")
+                    .build()
+                    .verify(token)
+                    .getClaim("email")
+                    .asString();
+
+            return email;
+
+        }catch (JWTVerificationException exception){
+            return new RuntimeException("token invalido ou claim ausente", exception).toString();
         }
     }
 
@@ -87,9 +117,5 @@ public class JwtService {
     }
 
 
-
-
-
-
-
 }
+

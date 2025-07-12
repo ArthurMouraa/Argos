@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "ocorrencias")
+@Table(name = "ocorrencia")
 public class Ocorrencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

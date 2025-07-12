@@ -1,23 +1,28 @@
-package com.project.argoss.infrastructure.config;
+package com.project.argoss.infrastructure.details;
 
+import com.project.argoss.domain.entity.Usuario;
 import com.project.argoss.domain.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+import org.springframework.stereotype.Service;
 
+@Service
+public class DetailsService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return usuarioRepository.findByEmail(email)
+        Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário com e-mail " + email + " não encontrado"));
+
+        return new UserDetailsImp(usuario);
 
     }
 }
+

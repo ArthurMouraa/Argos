@@ -18,8 +18,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "usuarios")
-public class Usuario implements UserDetails {
+@Table(name = "usuario")
+public class Usuario{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -62,43 +62,4 @@ public class Usuario implements UserDetails {
     }
 
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        if(this.role == UsuarioRole.ADMIN){
-            return List.of(new SimpleGrantedAuthority("role_admin"), new SimpleGrantedAuthority("role_user"));
-        }
-
-        return List.of(new SimpleGrantedAuthority("role_user"));
-    }
-
-    @Override
-    public String getPassword() {
-        return senha;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

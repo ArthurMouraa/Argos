@@ -1,7 +1,6 @@
 package com.project.argoss.infrastructure.config;
 
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,27 +20,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-
-    private final  SecurityFilter securityFilter;
+    @Autowired
+    private SecurityFilter securityFilter;
 
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         System.out.println("Filter chain chamado");
         return httpSecurity.csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                        auth.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/ocorrencia/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/turma/**", "/discente/**").authenticated()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 
     }
@@ -75,5 +74,7 @@ public class SecurityConfig {
     }
 
 
-
 }
+
+
+
