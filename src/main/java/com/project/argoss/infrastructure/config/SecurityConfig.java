@@ -63,7 +63,7 @@ public class SecurityConfig {
         return source;
     }
 
-    
+
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
