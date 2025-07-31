@@ -39,7 +39,7 @@ Como o projeto utiliza **Lombok**, certifique-se de realizar as seguintes config
 
 ---
 
-- ###Backend###:
+- ### Backend:
     - Tecnologia: Java com Spring Boot.
     - Passos:
         1. Navegar até a pasta main.
