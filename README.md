@@ -6,7 +6,7 @@
 
 ## 📌 Descrição do Projeto
 
-Aplicação web voltada ao registro e acompanhamento de ocorrências acadêmicas, permitindo a vinculação de alunos a turmas, geração de relatórios, controle de acesso por perfil, entre outras funcionalidades administrativas.
+Aplicação web para uso de progfessores voltada ao registro e acompanhamento de ocorrências acadêmicas, permitindo a vinculação de alunos a turmas, geração de relatórios, controle de acesso por perfil, entre outras funcionalidades administrativas.
 
 ### 🔧 Tecnologias Utilizadas
 - **Backend**: Java com Spring Boot
@@ -53,7 +53,13 @@ Como o projeto utiliza **Lombok**, certifique-se de realizar as seguintes config
 
 - **Backend**:
    ## ✅ Funcionalidades Implementadas
-  
+  - **Cadastro**:
+  - Cadastro com email, senha, matrícula e foto
+ 
+  - - **Login**:
+    -Email
+    -Senha
+
 - **Gerenciamento de Turmas**:
   - Listar, criar, atualizar e excluir turmas.
 
