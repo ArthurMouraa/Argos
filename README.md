@@ -47,6 +47,7 @@ Como o projeto utiliza **Lombok**, certifique-se de realizar as seguintes config
             ```bash
             ./mvnw spring-boot:run
             ```
+        3. No seu navegador, acesse a documentação: http://localhost:9090/swagger-ui/index.html#/
     - 🔐 Observação: O backend realiza autenticação baseada em token JWT, implementada utilizando Spring Security.
 
 ## Funcionalidades Implementadas
