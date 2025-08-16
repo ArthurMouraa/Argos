@@ -38,8 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/ocorrencia/**").authenticated()
-                                .requestMatchers(HttpMethod.POST, "/turma/**", "/discente/**").authenticated()
+                                .requestMatchers( "/ocorrencias/**", "/api/**").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/turma/**", "/discente/**").authenticated()
                                 .anyRequest().authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 

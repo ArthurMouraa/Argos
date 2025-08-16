@@ -17,6 +17,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @AllArgsConstructor
 @Service
 public class AuthService {
@@ -34,20 +37,21 @@ public class AuthService {
     UsuarioMapper usuarioMapper;
 
 
-    public  String login(AuthDto dto){
+    public  Map<String, String> login(AuthDto dto){
         try{
             var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
 
             var auth = authenticationManager.authenticate(usernamePassword);
 
             UserDetailsImp userDetails = (UserDetailsImp)  auth.getPrincipal();
-
-
-
             var token = jwtService.generateToken(userDetails);
 
-            return token;
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
 
+
+
+            return response;
         }catch (BadCredentialsException exception){
             throw  new InvalidateCredentialsException();
 

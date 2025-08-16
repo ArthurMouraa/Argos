@@ -46,5 +46,15 @@ public class Ocorrencia {
         this.gravidade = gravidade;
     }
 
+    @Override
+    public String toString() {
+        return "Ocorrencia{" +
+                "id=" + id +
+                ", observacao='" + observacao + '\'' +
+                ", aluno=" + (aluno != null ? "Aluno{id=" + aluno.getId() + ", nome='" + aluno.getNome() + "'}" : "null") +
+                '}';
+    }
+
+
 
 }

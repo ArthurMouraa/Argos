@@ -2,10 +2,12 @@ package com.project.argoss.domain.mapper;
 
 
 import com.project.argoss.aplication.dto.OcorrenciaRequest;
+import com.project.argoss.aplication.dto.OcorrenciaRequestPatch;
 import com.project.argoss.aplication.dto.OcorrenciaResponse;
 import com.project.argoss.domain.entity.Aluno;
 import com.project.argoss.domain.entity.Ocorrencia;
 import com.project.argoss.domain.entity.Usuario;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,6 +22,8 @@ public class OcorrenciaMapper {
         ocorrencia.setGravidade(request.gravidade());
         ocorrencia.setObservacao(request.observacao());
 
+
+
         return ocorrencia;
     }
 
@@ -32,10 +36,18 @@ public class OcorrenciaMapper {
                 ocorrencia.getGravidade(),
                 ocorrencia.getAluno().getNome(),
                 ocorrencia.getAluno().getMatricula(),
-                ocorrencia.getUsuario().getNome()
+                ocorrencia.getUsuario().getNome(),
+                ocorrencia.getAluno().getTurma().getNome()
         );
 
         return response;
+    }
+
+    public Page<OcorrenciaResponse> toResponsePageable(Page<Ocorrencia> ocorrencias){
+        return ocorrencias.map(ocorrencia -> new OcorrenciaResponse(
+                ocorrencia.getId(), ocorrencia.getObservacao(), ocorrencia.getDataOcorrencia(), ocorrencia.getHoraOcorrencia(), ocorrencia.getGravidade(),ocorrencia.getAluno().getNome(), ocorrencia.getAluno().getMatricula(), ocorrencia.getUsuario().getNome(), ocorrencia.getAluno().getTurma().getNome()
+        ));
+
     }
 
 
@@ -48,5 +60,14 @@ public class OcorrenciaMapper {
 
         return ocorrencia;
     }
+
+    public Ocorrencia toUpdateParcial(OcorrenciaRequestPatch requestPatch, Ocorrencia ocorrencia){
+
+        requestPatch.observacao().ifPresent(ocorrencia::setObservacao);
+        requestPatch.gravidade().ifPresent(ocorrencia::setGravidade);
+
+        return  ocorrencia;
+    }
+
 
 }

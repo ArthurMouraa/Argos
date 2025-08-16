@@ -41,6 +41,7 @@ public class JwtService {
                     .withIssuer("argos-api")
                     .withSubject(user.getId())
                     .withClaim("email", user.getEmail())
+                    .withClaim("role", user.getRole().name())
                     .withExpiresAt(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)))
                     .sign(algorithm);
 

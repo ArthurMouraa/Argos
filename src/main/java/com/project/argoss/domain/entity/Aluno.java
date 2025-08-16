@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -44,6 +45,10 @@ public class Aluno {
 
     @Enumerated(EnumType.STRING)
     private Sexo sexo;
+
+    @Column(name = "data_criacao")
+    private LocalDate dataAluno = LocalDate.now();
+
 
 
     @ManyToMany
